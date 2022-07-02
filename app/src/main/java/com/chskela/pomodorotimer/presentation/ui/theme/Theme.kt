@@ -1,4 +1,4 @@
-package com.chskela.pomodorotimer.ui.theme
+package com.chskela.pomodorotimer.presentation.ui.theme
 
 import android.app.Activity
 import android.os.Build
@@ -16,13 +16,15 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.ViewCompat
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
+    primary = BlueAlpha600,
+    onPrimary = OnBlueAlpha600Dark,
     secondary = PurpleGrey80,
     tertiary = Pink80
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
+    primary = BlueAlpha600,
+    onPrimary = OnBlueAlpha600Light,
     secondary = PurpleGrey40,
     tertiary = Pink40
 
