@@ -3,8 +3,23 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../../layout/compose-model-1656780431066.xml" value="0.1" />
+        <entry key="../../../../layout/compose-model-1656780431075.xml" value="0.14673913043478262" />
+        <entry key="../../../../layout/compose-model-1656780951014.xml" value="2.0" />
+        <entry key="../../../../layout/compose-model-1656781013990.xml" value="1.1" />
+        <entry key="../../../../layout/compose-model-1656782023212.xml" value="1.0" />
+        <entry key="app/src/main/res/drawable/brain.xml" value="0.1155" />
+        <entry key="app/src/main/res/drawable/coffer.xml" value="0.1155" />
         <entry key="app/src/main/res/drawable/dots_three_outline.xml" value="0.1535" />
+        <entry key="app/src/main/res/drawable/fast_forward.xml" value="0.1155" />
+        <entry key="app/src/main/res/drawable/focus_dark.xml" value="0.1155" />
         <entry key="app/src/main/res/drawable/focus_light.xml" value="0.1535" />
+        <entry key="app/src/main/res/drawable/gear_six.xml" value="0.1155" />
+        <entry key="app/src/main/res/drawable/key_return.xml" value="0.1155" />
+        <entry key="app/src/main/res/drawable/long_break_dark.xml" value="0.1155" />
+        <entry key="app/src/main/res/drawable/long_break_light.xml" value="0.1155" />
+        <entry key="app/src/main/res/drawable/short_break_dark.xml" value="0.1155" />
+        <entry key="app/src/main/res/drawable/short_break_light.xml" value="0.1155" />
       </map>
     </option>
   </component>
