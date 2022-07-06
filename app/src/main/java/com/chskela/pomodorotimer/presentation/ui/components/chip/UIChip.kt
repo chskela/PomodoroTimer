@@ -47,7 +47,11 @@ fun UIChip(
             tint = contentColor
         )
         Spacer(modifier = Modifier.size(8.dp))
-        Text(text = title.asString(), color = contentColor)
+        Text(
+            text = title.asString(),
+            color = contentColor,
+            style = MaterialTheme.typography.titleMedium
+        )
     }
 }
 
