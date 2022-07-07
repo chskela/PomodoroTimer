@@ -8,6 +8,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun HSpaser(modifier: Modifier = Modifier, height: Dp = 32.dp) {
+fun HSpaser(modifier: Modifier = Modifier, height: Dp = 16.dp) {
     Spacer(modifier = modifier.height(height))
 }
