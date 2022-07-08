@@ -11,7 +11,7 @@ import com.chskela.pomodorotimer.util.Constants.WORKING_PERIOD
 
 class MainScreenViewModel : ViewModel() {
 
-    var minutes: MutableState<String> = mutableStateOf("15")
+    var minutes: MutableState<String> = mutableStateOf("25")
         private set
 
     var seconds: MutableState<String> = mutableStateOf("00")
