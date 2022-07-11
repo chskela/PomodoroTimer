@@ -3,4 +3,7 @@
     <string name="play">play</string>
     <string name="fast_forward">fast forward</string>
     <string name="dots_three">dots three</string>
+    <string name="focus">Focus</string>
+    <string name="short_break">Short Break</string>
+    <string name="long_break">Long Break</string>
 </resources>
