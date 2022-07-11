@@ -17,46 +17,101 @@ class MainScreenViewModel : ViewModel() {
     var seconds: MutableState<String> = mutableStateOf("00")
         private set
 
-    private var repeat: Int =  0
+    var isRunnable: MutableState<Boolean> = mutableStateOf(true)
+        private set
 
-    private val shortBreak = object : CountDownTimer(SHORT_BREAK, ONE_SECOND) {
-        override fun onTick(p0: Long) {
-            periodToUi(p0)
-        }
+    private var pomodoroState: PomodoroState = PomodoroState.Focus
+    private var timerState: TimerState = TimerState.Stop
 
-        override fun onFinish() {
+    private var repeatWorkPeriod: Int = 0
+    private var time: Long = 0
 
-        }
-    }
+    private lateinit var timer: CountDownTimer
 
-    private val longBreak = object : CountDownTimer(LONG_BREAK, ONE_SECOND) {
-        override fun onTick(p0: Long) {
-            periodToUi(p0)
-        }
+    fun onEvent(event: MainScreenEvent) {
+        when (event) {
+            MainScreenEvent.OnStart -> {
+                isRunnable.value = false
+                timerState = TimerState.Running
 
-        override fun onFinish() {
+                if (time != 0L) {
+                    when (pomodoroState) {
+                        is PomodoroState.Focus -> {
+                            repeatWorkPeriod++
+                            timer = getWorkTimer(time)
+                            timer.start()
+                        }
 
-        }
-    }
+                        is PomodoroState.LongBreak -> {
+                            timer = getBreakTimer(time)
+                            timer.start()
+                        }
 
-    private val workingPeriod = object : CountDownTimer(WORKING_PERIOD, ONE_SECOND) {
-        override fun onTick(p0: Long) {
-            periodToUi(p0)
-        }
+                        is PomodoroState.ShortBreak -> {
+                            timer = getBreakTimer(time)
+                            timer.start()
+                        }
+                    }
+                } else {
+                    when (pomodoroState) {
+                        is PomodoroState.Focus -> {
+                            repeatWorkPeriod++
+                            timer = getWorkTimer()
+                            timer.start()
+                        }
 
-        override fun onFinish() {
-            repeat++
+                        is PomodoroState.LongBreak -> {
+                            timer = getBreakTimer(LONG_BREAK)
+                            timer.start()
+                        }
 
-            if (repeat % 4 ==0) {
-                longBreak.start()
-            } else {
-                shortBreak.start()
+                        is PomodoroState.ShortBreak -> {
+                            timer = getBreakTimer()
+                            timer.start()
+                        }
+                    }
+                }
+            }
+
+            MainScreenEvent.OnPause -> {
+                isRunnable.value = true
+                timerState = TimerState.Pause(time)
+                timer.cancel()
+
             }
         }
     }
 
-    fun startWorkingPeriod() {
-        workingPeriod.start()
+    private fun getTimer(
+        time: Long,
+        onFinishHandler: () -> Unit
+    ) = object : CountDownTimer(time, ONE_SECOND) {
+
+        override fun onTick(p0: Long) {
+            periodToUi(p0)
+            updateTime(p0)
+        }
+
+        override fun onFinish() {
+            updateTime(0)
+            timerState = TimerState.Stop
+            onFinishHandler()
+        }
+    }
+
+    private fun getWorkTimer(time: Long = WORKING_PERIOD) = getTimer(time) {
+        pomodoroState = if (repeatWorkPeriod % 4 == 0) {
+            periodToUi(LONG_BREAK)
+            PomodoroState.LongBreak
+        } else {
+            periodToUi(SHORT_BREAK)
+            PomodoroState.ShortBreak
+        }
+    }
+
+    private fun getBreakTimer(time: Long = SHORT_BREAK) = getTimer(time) {
+        periodToUi(WORKING_PERIOD)
+        pomodoroState = PomodoroState.Focus
     }
 
     private fun periodToUi(p: Long) {
@@ -66,4 +121,8 @@ class MainScreenViewModel : ViewModel() {
     }
 
     private fun format(value: Long) = if (value <= 9) "0$value" else "$value"
+
+    private fun updateTime(value: Long) {
+        time = value
+    }
 }
