@@ -60,7 +60,16 @@ fun MainScreen(mainScreenViewModel: MainScreenViewModel) {
             WSpaser()
             UIButton(
                 type = UIButtonType.Large,
-                onClick = { mainScreenViewModel.startWorkingPeriod() })
+                onClick = {
+                    mainScreenViewModel.onEvent(
+                        if (mainScreenViewModel.isRunnable.value) {
+                            MainScreenEvent.OnStart
+                        } else {
+                            MainScreenEvent.OnPause
+                        }
+                    )
+                }
+            )
             WSpaser()
             UIButton(
                 icon = R.drawable.fast_forward,
