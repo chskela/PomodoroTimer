@@ -15,6 +15,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import com.chskela.pomodorotimer.R
 import com.chskela.pomodorotimer.presentation.ui.components.button.UIButton
 import com.chskela.pomodorotimer.presentation.ui.components.button.UIButtonType
+import com.chskela.pomodorotimer.presentation.ui.components.chip.ChipUiState
 import com.chskela.pomodorotimer.presentation.ui.components.chip.UIChip
 import com.chskela.pomodorotimer.presentation.ui.components.spaser.WSpaser
 import com.chskela.pomodorotimer.presentation.ui.theme.PomodoroTimerTheme
@@ -22,15 +23,28 @@ import com.chskela.pomodorotimer.util.UiText
 
 @Composable
 fun MainScreen(mainScreenViewModel: MainScreenViewModel) {
+    val chipUiState: ChipUiState = when (mainScreenViewModel.pomodoroState.value) {
+        PomodoroState.Focus -> ChipUiState()
+        PomodoroState.LongBreak -> ChipUiState(
+            title = UiText.StringResource(R.string.long_break),
+            icon = R.drawable.coffer
+        )
+        PomodoroState.ShortBreak -> ChipUiState(
+            title = UiText.StringResource(R.string.short_break),
+            icon = R.drawable.coffer
+        )
+    }
+
     ConstraintLayout(
         modifier = Modifier.fillMaxSize()
     ) {
         val (buttons, text, chip) = createRefs()
+
         UIChip(modifier = Modifier.constrainAs(chip) {
             top.linkTo(parent.top, margin = 16.dp)
             start.linkTo(parent.start)
             end.linkTo(parent.end)
-        })
+        }, content = chipUiState)
 
         Text(
             modifier = Modifier.constrainAs(text) {
@@ -58,18 +72,20 @@ fun MainScreen(mainScreenViewModel: MainScreenViewModel) {
                 description = UiText.StringResource(R.string.dots_three)
             )
             WSpaser()
-            UIButton(
-                type = UIButtonType.Large,
-                onClick = {
-                    mainScreenViewModel.onEvent(
-                        if (mainScreenViewModel.isRunnable.value) {
-                            MainScreenEvent.OnStart
-                        } else {
-                            MainScreenEvent.OnPause
-                        }
-                    )
-                }
-            )
+
+            if (mainScreenViewModel.isRunnable.value) {
+                UIButton(
+                    type = UIButtonType.Large,
+                    onClick = { mainScreenViewModel.onEvent(MainScreenEvent.OnStart) }
+                )
+            } else {
+                UIButton(
+                    type = UIButtonType.Large,
+                    icon = R.drawable.pause,
+                    onClick = { mainScreenViewModel.onEvent(MainScreenEvent.OnPause) }
+                )
+            }
+
             WSpaser()
             UIButton(
                 icon = R.drawable.fast_forward,
