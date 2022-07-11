@@ -1,7 +1,6 @@
 package com.chskela.pomodorotimer.presentation.ui.components.chip
 
 import android.content.res.Configuration
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -22,8 +21,7 @@ import com.chskela.pomodorotimer.util.UiText
 @Composable
 fun UIChip(
     modifier: Modifier = Modifier,
-    title: UiText = UiText.DynamicString("Focus"),
-    @DrawableRes icon: Int = R.drawable.brain,
+    content: ChipUiState = ChipUiState(),
     description: UiText = UiText.StringResource(R.string.play),
     contentColor: Color = MaterialTheme.colorScheme.onSecondary,
     backgroundColor: Color = MaterialTheme.colorScheme.secondary,
@@ -42,13 +40,13 @@ fun UIChip(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
-            imageVector = ImageVector.vectorResource(id = icon),
+            imageVector = ImageVector.vectorResource(id = content.icon),
             contentDescription = description.asString(),
             tint = contentColor
         )
         Spacer(modifier = Modifier.size(8.dp))
         Text(
-            text = title.asString(),
+            text = content.title.asString(),
             color = contentColor,
             style = MaterialTheme.typography.titleMedium
         )
