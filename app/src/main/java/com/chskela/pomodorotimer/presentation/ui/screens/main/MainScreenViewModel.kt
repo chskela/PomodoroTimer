@@ -96,6 +96,7 @@ class MainScreenViewModel : ViewModel() {
         override fun onFinish() {
             updateTime(0)
             timerState = TimerState.Stop
+            isRunnable.value = true
             onFinishHandler()
         }
     }
