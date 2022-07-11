@@ -20,7 +20,8 @@ class MainScreenViewModel : ViewModel() {
     var isRunnable: MutableState<Boolean> = mutableStateOf(true)
         private set
 
-    private var pomodoroState: PomodoroState = PomodoroState.Focus
+    var pomodoroState: MutableState<PomodoroState> = mutableStateOf(PomodoroState.Focus)
+        private set
     private var timerState: TimerState = TimerState.Stop
 
     private var repeatWorkPeriod: Int = 0
@@ -35,7 +36,7 @@ class MainScreenViewModel : ViewModel() {
                 timerState = TimerState.Running
 
                 if (time != 0L) {
-                    when (pomodoroState) {
+                    when (pomodoroState.value) {
                         is PomodoroState.Focus -> {
                             repeatWorkPeriod++
                             timer = getWorkTimer(time)
@@ -53,7 +54,7 @@ class MainScreenViewModel : ViewModel() {
                         }
                     }
                 } else {
-                    when (pomodoroState) {
+                    when (pomodoroState.value) {
                         is PomodoroState.Focus -> {
                             repeatWorkPeriod++
                             timer = getWorkTimer()
@@ -100,7 +101,7 @@ class MainScreenViewModel : ViewModel() {
     }
 
     private fun getWorkTimer(time: Long = WORKING_PERIOD) = getTimer(time) {
-        pomodoroState = if (repeatWorkPeriod % 4 == 0) {
+        pomodoroState.value = if (repeatWorkPeriod % 4 == 0) {
             periodToUi(LONG_BREAK)
             PomodoroState.LongBreak
         } else {
@@ -111,7 +112,7 @@ class MainScreenViewModel : ViewModel() {
 
     private fun getBreakTimer(time: Long = SHORT_BREAK) = getTimer(time) {
         periodToUi(WORKING_PERIOD)
-        pomodoroState = PomodoroState.Focus
+        pomodoroState.value = PomodoroState.Focus
     }
 
     private fun periodToUi(p: Long) {
