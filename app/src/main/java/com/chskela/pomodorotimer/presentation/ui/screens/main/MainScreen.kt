@@ -1,7 +1,9 @@
 package com.chskela.pomodorotimer.presentation.ui.screens.main
 
 import android.content.res.Configuration
-import android.util.Log
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,9 +11,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -24,30 +27,39 @@ import com.chskela.pomodorotimer.presentation.ui.components.spaser.WSpaser
 import com.chskela.pomodorotimer.presentation.ui.theme.PomodoroTimerTheme
 import com.chskela.pomodorotimer.util.UiText
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun MainScreen(mainScreenViewModel: MainScreenViewModel) {
-    val chipUiState: ChipUiState = when (mainScreenViewModel.pomodoroState.value) {
-        PomodoroState.Focus -> ChipUiState()
-        PomodoroState.LongBreak -> ChipUiState(
-            title = UiText.StringResource(R.string.long_break),
-            icon = R.drawable.coffer
-        )
-        PomodoroState.ShortBreak -> ChipUiState(
-            title = UiText.StringResource(R.string.short_break),
-            icon = R.drawable.coffer
-        )
-    }
-    Surface() {
+    val textFontWent: Int by animateIntAsState(
+        targetValue = if (mainScreenViewModel.isRunnable.value) 400 else 700
+    )
+
+    Surface {
         ConstraintLayout(
             modifier = Modifier.fillMaxSize()
         ) {
             val (buttons, text, chip) = createRefs()
 
-            UIChip(modifier = Modifier.constrainAs(chip) {
+            AnimatedContent(modifier = Modifier.constrainAs(chip) {
                 top.linkTo(parent.top, margin = 16.dp)
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
-            }, content = chipUiState)
+            }, targetState = mainScreenViewModel.pomodoroState.value) { pomodoroState ->
+
+                val chipUiState: ChipUiState = when (pomodoroState) {
+                    PomodoroState.Focus -> ChipUiState()
+                    PomodoroState.LongBreak -> ChipUiState(
+                        title = UiText.StringResource(R.string.long_break),
+                        icon = R.drawable.coffer
+                    )
+                    PomodoroState.ShortBreak -> ChipUiState(
+                        title = UiText.StringResource(R.string.short_break),
+                        icon = R.drawable.coffer
+                    )
+                }
+
+                UIChip(content = chipUiState)
+            }
 
             Text(
                 modifier = Modifier.constrainAs(text) {
@@ -57,13 +69,15 @@ fun MainScreen(mainScreenViewModel: MainScreenViewModel) {
                     end.linkTo(parent.end)
                 },
                 text = "${mainScreenViewModel.minutes.value}\n${mainScreenViewModel.seconds.value}",
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.titleLarge.copy(
+                    fontWeight = FontWeight(textFontWent)
+                ),
                 color = MaterialTheme.colorScheme.onSurface
             )
 
             Row(
                 modifier = Modifier.constrainAs(buttons) {
-                    bottom.linkTo(parent.bottom, margin = 16.dp)
+                    bottom.linkTo(parent.bottom, margin = 24.dp)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 },
@@ -100,7 +114,6 @@ fun MainScreen(mainScreenViewModel: MainScreenViewModel) {
             }
         }
     }
-
 }
 
 
