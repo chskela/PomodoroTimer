@@ -7,6 +7,7 @@ import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -32,11 +33,10 @@ import com.chskela.pomodorotimer.util.UiText
 @Composable
 fun MainScreen(mainScreenViewModel: MainScreenViewModel) {
 
-    val textFontWent: Int by animateIntAsState(
-        targetValue = if (mainScreenViewModel.isRunnable.value) 400 else 700
-    )
+    val textFontWent: FontWeight =
+        if (mainScreenViewModel.isRunnable.value) FontWeight.Normal else FontWeight.SemiBold
 
-    val colorScheme = when (mainScreenViewModel.pomodoroState.value) {
+    val colorScheme: PomodoroColorScheme = when (mainScreenViewModel.pomodoroState.value) {
         PomodoroState.Focus -> PomodoroColorScheme.RedColorScheme
         PomodoroState.LongBreak -> PomodoroColorScheme.BlueColorScheme
         PomodoroState.ShortBreak -> PomodoroColorScheme.GreenColorScheme
@@ -81,9 +81,7 @@ fun MainScreen(mainScreenViewModel: MainScreenViewModel) {
                         end.linkTo(parent.end)
                     },
                     text = "${mainScreenViewModel.minutes.value}\n${mainScreenViewModel.seconds.value}",
-                    style = MaterialTheme.typography.titleLarge.copy(
-                        fontWeight = FontWeight(textFontWent)
-                    ),
+                    style = MaterialTheme.typography.titleLarge.copy(fontWeight = textFontWent),
                     color = MaterialTheme.colorScheme.onSurface
                 )
 
@@ -96,11 +94,11 @@ fun MainScreen(mainScreenViewModel: MainScreenViewModel) {
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    UIButton(
-                        icon = R.drawable.dots_three_outline,
-                        backgroundColor = MaterialTheme.colorScheme.secondary,
-                        description = UiText.StringResource(R.string.dots_three)
-                    )
+//                    UIButton(
+//                        icon = R.drawable.dots_three_outline,
+//                        backgroundColor = MaterialTheme.colorScheme.secondary,
+//                        description = UiText.StringResource(R.string.dots_three)
+//                    )
                     WSpaser()
 
                     if (mainScreenViewModel.isRunnable.value) {
@@ -117,11 +115,11 @@ fun MainScreen(mainScreenViewModel: MainScreenViewModel) {
                     }
 
                     WSpaser()
-                    UIButton(
-                        icon = R.drawable.fast_forward,
-                        backgroundColor = MaterialTheme.colorScheme.secondary,
-                        description = UiText.StringResource(R.string.fast_forward)
-                    )
+//                    UIButton(
+//                        icon = R.drawable.fast_forward,
+//                        backgroundColor = MaterialTheme.colorScheme.secondary,
+//                        description = UiText.StringResource(R.string.fast_forward)
+//                    )
                 }
             }
         }
