@@ -31,9 +31,11 @@ import com.chskela.pomodorotimer.util.UiText
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun MainScreen(mainScreenViewModel: MainScreenViewModel) {
+
     val textFontWent: Int by animateIntAsState(
         targetValue = if (mainScreenViewModel.isRunnable.value) 400 else 700
     )
+
     val colorScheme = when (mainScreenViewModel.pomodoroState.value) {
         PomodoroState.Focus -> PomodoroColorScheme.RedColorScheme
         PomodoroState.LongBreak -> PomodoroColorScheme.BlueColorScheme
@@ -120,12 +122,10 @@ fun MainScreen(mainScreenViewModel: MainScreenViewModel) {
                         backgroundColor = MaterialTheme.colorScheme.secondary,
                         description = UiText.StringResource(R.string.fast_forward)
                     )
-
                 }
             }
         }
     }
-
 }
 
 
