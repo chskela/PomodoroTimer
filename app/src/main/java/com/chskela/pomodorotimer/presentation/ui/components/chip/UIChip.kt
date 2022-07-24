@@ -15,7 +15,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.chskela.pomodorotimer.R
-import com.chskela.pomodorotimer.presentation.ui.theme.PomodoroTimerTheme
+import com.chskela.pomodorotimer.presentation.ui.theme.PomodoroTheme
 import com.chskela.pomodorotimer.util.UiText
 
 @Composable
@@ -58,7 +58,7 @@ fun UIChip(
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun PreviewUIChip() {
-    PomodoroTimerTheme {
+    PomodoroTheme {
         Surface {
             UIChip()
         }
