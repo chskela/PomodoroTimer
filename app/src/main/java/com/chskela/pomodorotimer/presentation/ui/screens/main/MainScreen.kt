@@ -3,7 +3,6 @@ package com.chskela.pomodorotimer.presentation.ui.screens.main
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,13 +11,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.chskela.pomodorotimer.R
 import com.chskela.pomodorotimer.presentation.ui.components.button.UIButton
 import com.chskela.pomodorotimer.presentation.ui.components.button.UIButtonType
@@ -31,7 +30,7 @@ import com.chskela.pomodorotimer.util.UiText
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun MainScreen(mainScreenViewModel: MainScreenViewModel) {
+fun MainScreen(mainScreenViewModel: MainScreenViewModel = viewModel()) {
 
     val textFontWent: FontWeight =
         if (mainScreenViewModel.isRunnable.value) FontWeight.Normal else FontWeight.SemiBold

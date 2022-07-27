@@ -19,7 +19,10 @@
         <entry key="../../../../layout/compose-model-1658668090493.xml" value="1.18125" />
         <entry key="../../../../layout/compose-model-1658668094244.xml" value="0.5735294117647058" />
         <entry key="../../../../layout/compose-model-1658671722539.xml" value="0.22" />
+        <entry key="../../../../layout/compose-model-1658954126459.xml" value="0.2" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.189" />
       </map>
     </option>
   </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK" />
 </project>

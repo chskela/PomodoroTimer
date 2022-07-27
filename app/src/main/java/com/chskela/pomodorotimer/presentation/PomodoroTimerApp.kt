@@ -8,6 +8,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.chskela.pomodorotimer.presentation.ui.screens.main.MainScreen
 import com.chskela.pomodorotimer.presentation.ui.screens.main.MainScreenViewModel
 
@@ -18,7 +19,6 @@ import com.chskela.pomodorotimer.presentation.ui.screens.main.MainScreenViewMode
 @Composable
 fun PomodoroTimerApp() {
     Scaffold(Modifier.fillMaxSize()) { _ ->
-        val mainScreenViewModel = MainScreenViewModel()
-        MainScreen(mainScreenViewModel)
+        MainScreen()
     }
 }
