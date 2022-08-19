@@ -1,15 +1,29 @@
 package com.chskela.pomodorotimer.presentation.ui.screens.main
 
+import android.app.Application
+import android.app.NotificationManager
 import android.os.CountDownTimer
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.ViewModel
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.AndroidViewModel
+import com.chskela.pomodorotimer.R
 import com.chskela.pomodorotimer.util.Constants.LONG_BREAK
 import com.chskela.pomodorotimer.util.Constants.ONE_SECOND
 import com.chskela.pomodorotimer.util.Constants.SHORT_BREAK
 import com.chskela.pomodorotimer.util.Constants.WORKING_PERIOD
+import com.chskela.pomodorotimer.util.createChannel
+import com.chskela.pomodorotimer.util.sendNotification
 
-class MainScreenViewModel : ViewModel() {
+class MainScreenViewModel(private val app: Application) : AndroidViewModel(app) {
+
+    init {
+        createChannel(
+            app.applicationContext,
+            app.getString(R.string.pomodoro_notification_channel_id),
+            app.getString(R.string.pomodoro_notification_channel_name)
+        )
+    }
 
     var minutes: MutableState<String> = mutableStateOf("25")
         private set
@@ -34,6 +48,13 @@ class MainScreenViewModel : ViewModel() {
             MainScreenEvent.OnStart -> {
                 isRunnable.value = false
                 timerState = TimerState.Running
+
+                val notificationManager = ContextCompat.getSystemService(
+                    app,
+                    NotificationManager::class.java
+                ) as NotificationManager
+
+                notificationManager.sendNotification(app.getString(R.string.timer_running), app)
 
                 if (time != 0L) {
                     when (pomodoroState.value) {
