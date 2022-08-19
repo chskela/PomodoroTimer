@@ -12,6 +12,7 @@ import com.chskela.pomodorotimer.util.Constants.LONG_BREAK
 import com.chskela.pomodorotimer.util.Constants.ONE_SECOND
 import com.chskela.pomodorotimer.util.Constants.SHORT_BREAK
 import com.chskela.pomodorotimer.util.Constants.WORKING_PERIOD
+import com.chskela.pomodorotimer.util.cancelNotifications
 import com.chskela.pomodorotimer.util.createChannel
 import com.chskela.pomodorotimer.util.sendNotification
 
@@ -44,17 +45,16 @@ class MainScreenViewModel(private val app: Application) : AndroidViewModel(app) 
     private lateinit var timer: CountDownTimer
 
     fun onEvent(event: MainScreenEvent) {
+        val notificationManager = ContextCompat.getSystemService(
+            app,
+            NotificationManager::class.java
+        ) as NotificationManager
+        notificationManager.cancelNotifications()
+
         when (event) {
             MainScreenEvent.OnStart -> {
                 isRunnable.value = false
                 timerState = TimerState.Running
-
-                val notificationManager = ContextCompat.getSystemService(
-                    app,
-                    NotificationManager::class.java
-                ) as NotificationManager
-
-                notificationManager.sendNotification(app.getString(R.string.timer_running), app)
 
                 if (time != 0L) {
                     when (pomodoroState.value) {
@@ -62,16 +62,19 @@ class MainScreenViewModel(private val app: Application) : AndroidViewModel(app) 
                             repeatWorkPeriod++
                             timer = getWorkTimer(time)
                             timer.start()
+                            notificationManager.sendNotification(app.getString(R.string.focus), app)
                         }
 
                         is PomodoroState.LongBreak -> {
                             timer = getBreakTimer(time)
                             timer.start()
+                            notificationManager.sendNotification(app.getString(R.string.long_break), app)
                         }
 
                         is PomodoroState.ShortBreak -> {
                             timer = getBreakTimer(time)
                             timer.start()
+                            notificationManager.sendNotification(app.getString(R.string.short_break), app)
                         }
                     }
                 } else {
@@ -80,16 +83,19 @@ class MainScreenViewModel(private val app: Application) : AndroidViewModel(app) 
                             repeatWorkPeriod++
                             timer = getWorkTimer()
                             timer.start()
+                            notificationManager.sendNotification(app.getString(R.string.focus), app)
                         }
 
                         is PomodoroState.LongBreak -> {
                             timer = getBreakTimer(LONG_BREAK)
                             timer.start()
+                            notificationManager.sendNotification(app.getString(R.string.long_break), app)
                         }
 
                         is PomodoroState.ShortBreak -> {
                             timer = getBreakTimer()
                             timer.start()
+                            notificationManager.sendNotification(app.getString(R.string.short_break), app)
                         }
                     }
                 }
@@ -99,7 +105,7 @@ class MainScreenViewModel(private val app: Application) : AndroidViewModel(app) 
                 isRunnable.value = true
                 timerState = TimerState.Pause(time)
                 timer.cancel()
-
+                notificationManager.sendNotification(app.getString(R.string.pause), app)
             }
         }
     }
