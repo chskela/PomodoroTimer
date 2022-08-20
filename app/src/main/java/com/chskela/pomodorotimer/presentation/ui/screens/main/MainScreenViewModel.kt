@@ -26,6 +26,11 @@ class MainScreenViewModel(private val app: Application) : AndroidViewModel(app) 
         )
     }
 
+    private val notificationManager = ContextCompat.getSystemService(
+        app,
+        NotificationManager::class.java
+    ) as NotificationManager
+
     var minutes: MutableState<String> = mutableStateOf("25")
         private set
 
@@ -45,10 +50,6 @@ class MainScreenViewModel(private val app: Application) : AndroidViewModel(app) 
     private lateinit var timer: CountDownTimer
 
     fun onEvent(event: MainScreenEvent) {
-        val notificationManager = ContextCompat.getSystemService(
-            app,
-            NotificationManager::class.java
-        ) as NotificationManager
         notificationManager.cancelNotifications()
 
         when (event) {
@@ -62,19 +63,25 @@ class MainScreenViewModel(private val app: Application) : AndroidViewModel(app) 
                             repeatWorkPeriod++
                             timer = getWorkTimer(time)
                             timer.start()
-                            notificationManager.sendNotification(app.getString(R.string.focus), app)
+                            sendNotificationWithApp(app.getString(R.string.focus), R.drawable.brain)
                         }
 
                         is PomodoroState.LongBreak -> {
                             timer = getBreakTimer(time)
                             timer.start()
-                            notificationManager.sendNotification(app.getString(R.string.long_break), app)
+                            sendNotificationWithApp(
+                                app.getString(R.string.long_break),
+                                R.drawable.coffer
+                            )
                         }
 
                         is PomodoroState.ShortBreak -> {
                             timer = getBreakTimer(time)
                             timer.start()
-                            notificationManager.sendNotification(app.getString(R.string.short_break), app)
+                            sendNotificationWithApp(
+                                app.getString(R.string.short_break),
+                                R.drawable.coffer
+                            )
                         }
                     }
                 } else {
@@ -83,19 +90,25 @@ class MainScreenViewModel(private val app: Application) : AndroidViewModel(app) 
                             repeatWorkPeriod++
                             timer = getWorkTimer()
                             timer.start()
-                            notificationManager.sendNotification(app.getString(R.string.focus), app)
+                            sendNotificationWithApp(app.getString(R.string.focus), R.drawable.brain)
                         }
 
                         is PomodoroState.LongBreak -> {
                             timer = getBreakTimer(LONG_BREAK)
                             timer.start()
-                            notificationManager.sendNotification(app.getString(R.string.long_break), app)
+                            sendNotificationWithApp(
+                                app.getString(R.string.long_break),
+                                R.drawable.coffer
+                            )
                         }
 
                         is PomodoroState.ShortBreak -> {
                             timer = getBreakTimer()
                             timer.start()
-                            notificationManager.sendNotification(app.getString(R.string.short_break), app)
+                            sendNotificationWithApp(
+                                app.getString(R.string.short_break),
+                                R.drawable.coffer
+                            )
                         }
                     }
                 }
@@ -105,10 +118,15 @@ class MainScreenViewModel(private val app: Application) : AndroidViewModel(app) 
                 isRunnable.value = true
                 timerState = TimerState.Pause(time)
                 timer.cancel()
-                notificationManager.sendNotification(app.getString(R.string.pause), app)
+                sendNotificationWithApp(
+                    app.getString(R.string.pause),
+                    R.drawable.pause
+                )
             }
         }
     }
+
+    private val sendNotificationWithApp = notificationManager.sendNotification(app)
 
     private fun getTimer(
         time: Long,
@@ -125,6 +143,7 @@ class MainScreenViewModel(private val app: Application) : AndroidViewModel(app) 
             timerState = TimerState.Stop
             isRunnable.value = true
             onFinishHandler()
+            notificationManager.cancelNotifications()
         }
     }
 
