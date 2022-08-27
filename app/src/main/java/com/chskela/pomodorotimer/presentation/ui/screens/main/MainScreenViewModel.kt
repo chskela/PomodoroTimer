@@ -127,6 +127,15 @@ class MainScreenViewModel(private val app: Application) : AndroidViewModel(app) 
                     R.drawable.pause
                 )
             }
+
+            MainScreenEvent.OnReset -> {
+                mainScreenUiState.value = initialUiState
+                notificationManager.cancelNotifications()
+                timerState = TimerState.Stop
+                timer.cancel()
+                repeatWorkPeriod = 0
+                time = 0
+            }
         }
     }
 
