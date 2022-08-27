@@ -146,7 +146,9 @@ class MainScreenViewModel(private val app: Application) : AndroidViewModel(app) 
     ) = object : CountDownTimer(time, ONE_SECOND) {
 
         override fun onTick(p0: Long) {
-            periodToUi(p0)
+            mainScreenUiState.value = mainScreenUiState.value.copy(
+                timerTime = timestampToTimer(p0)
+            )
             updateTime(p0)
         }
 
@@ -162,30 +164,29 @@ class MainScreenViewModel(private val app: Application) : AndroidViewModel(app) 
     }
 
     private fun getWorkTimer(time: Long = WORKING_PERIOD) = getTimer(time) {
-        mainScreenUiState.value = mainScreenUiState.value.copy(
-            pomodoroState = if (repeatWorkPeriod % 4 == 0) {
-                periodToUi(LONG_BREAK)
-                PomodoroState.LongBreak
-            } else {
-                periodToUi(SHORT_BREAK)
-                PomodoroState.ShortBreak
-            }
-        )
+        mainScreenUiState.value = if (repeatWorkPeriod % 4 == 0) {
+            mainScreenUiState.value.copy(
+                pomodoroState = PomodoroState.LongBreak,
+                timerTime = timestampToTimer(LONG_BREAK)
+            )
+        } else {
+            mainScreenUiState.value.copy(
+                pomodoroState = PomodoroState.ShortBreak,
+                timerTime = timestampToTimer(SHORT_BREAK)
+            )
+        }
     }
 
     private fun getBreakTimer(time: Long = SHORT_BREAK) = getTimer(time) {
-        periodToUi(WORKING_PERIOD)
         mainScreenUiState.value = mainScreenUiState.value.copy(
-            pomodoroState = PomodoroState.Focus
+            pomodoroState = PomodoroState.Focus,
+            timerTime = timestampToTimer(WORKING_PERIOD)
         )
     }
 
-    private fun periodToUi(p: Long) {
+    private fun timestampToTimer(p: Long): String {
         val allSeconds = p / 1000
-        mainScreenUiState.value = mainScreenUiState.value.copy(
-            seconds = format(allSeconds % 60),
-            minutes = format(allSeconds / 60)
-        )
+        return "${format(allSeconds / 60)}\n${format(allSeconds % 60)}"
     }
 
     private fun format(value: Long) = if (value <= 9) "0$value" else "$value"
