@@ -33,17 +33,15 @@ class MainScreenViewModel(private val app: Application) : AndroidViewModel(app) 
         NotificationManager::class.java
     ) as NotificationManager
 
-    var minutes: MutableState<String> = mutableStateOf("25")
-        private set
+    var mainScreenUiState: MutableState<MainScreenUiState> = mutableStateOf(
+        MainScreenUiState(
+            PomodoroState.Focus,
+            true,
+            "25",
+            "00"
+        )
+    )
 
-    var seconds: MutableState<String> = mutableStateOf("00")
-        private set
-
-    var isRunnable: MutableState<Boolean> = mutableStateOf(true)
-        private set
-
-    var pomodoroState: MutableState<PomodoroState> = mutableStateOf(PomodoroState.Focus)
-        private set
     private var timerState: TimerState = TimerState.Stop
 
     private var repeatWorkPeriod: Int = 0
@@ -56,11 +54,13 @@ class MainScreenViewModel(private val app: Application) : AndroidViewModel(app) 
 
         when (event) {
             MainScreenEvent.OnStart -> {
-                isRunnable.value = false
+                mainScreenUiState.value = mainScreenUiState.value.copy(
+                    isRunnable = false
+                )
                 timerState = TimerState.Running
 
                 if (time != 0L) {
-                    when (pomodoroState.value) {
+                    when (mainScreenUiState.value.pomodoroState) {
                         is PomodoroState.Focus -> {
                             repeatWorkPeriod++
                             timer = getWorkTimer(time)
@@ -87,7 +87,7 @@ class MainScreenViewModel(private val app: Application) : AndroidViewModel(app) 
                         }
                     }
                 } else {
-                    when (pomodoroState.value) {
+                    when (mainScreenUiState.value.pomodoroState) {
                         is PomodoroState.Focus -> {
                             repeatWorkPeriod++
                             timer = getWorkTimer()
@@ -117,7 +117,9 @@ class MainScreenViewModel(private val app: Application) : AndroidViewModel(app) 
             }
 
             MainScreenEvent.OnPause -> {
-                isRunnable.value = true
+                mainScreenUiState.value = mainScreenUiState.value.copy(
+                    isRunnable = true
+                )
                 timerState = TimerState.Pause(time)
                 timer.cancel()
                 sendNotificationWithApp(
@@ -143,31 +145,39 @@ class MainScreenViewModel(private val app: Application) : AndroidViewModel(app) 
         override fun onFinish() {
             updateTime(0)
             timerState = TimerState.Stop
-            isRunnable.value = true
+            mainScreenUiState.value = mainScreenUiState.value.copy(
+                isRunnable = true
+            )
             onFinishHandler()
             notificationManager.cancelNotifications()
         }
     }
 
     private fun getWorkTimer(time: Long = WORKING_PERIOD) = getTimer(time) {
-        pomodoroState.value = if (repeatWorkPeriod % 4 == 0) {
-            periodToUi(LONG_BREAK)
-            PomodoroState.LongBreak
-        } else {
-            periodToUi(SHORT_BREAK)
-            PomodoroState.ShortBreak
-        }
+        mainScreenUiState.value = mainScreenUiState.value.copy(
+            pomodoroState = if (repeatWorkPeriod % 4 == 0) {
+                periodToUi(LONG_BREAK)
+                PomodoroState.LongBreak
+            } else {
+                periodToUi(SHORT_BREAK)
+                PomodoroState.ShortBreak
+            }
+        )
     }
 
     private fun getBreakTimer(time: Long = SHORT_BREAK) = getTimer(time) {
         periodToUi(WORKING_PERIOD)
-        pomodoroState.value = PomodoroState.Focus
+        mainScreenUiState.value = mainScreenUiState.value.copy(
+            pomodoroState = PomodoroState.Focus
+        )
     }
 
     private fun periodToUi(p: Long) {
         val allSeconds = p / 1000
-        seconds.value = format(allSeconds % 60)
-        minutes.value = format(allSeconds / 60)
+        mainScreenUiState.value = mainScreenUiState.value.copy(
+            seconds = format(allSeconds % 60),
+            minutes = format(allSeconds / 60)
+        )
     }
 
     private fun format(value: Long) = if (value <= 9) "0$value" else "$value"
