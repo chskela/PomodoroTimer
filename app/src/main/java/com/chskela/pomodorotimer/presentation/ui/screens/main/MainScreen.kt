@@ -95,11 +95,12 @@ fun MainScreen(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-//                    UIButton(
-//                        icon = R.drawable.dots_three_outline,
-//                        backgroundColor = MaterialTheme.colorScheme.secondary,
-//                        description = UiText.StringResource(R.string.dots_three)
-//                    )
+                    UIButton(
+                        icon = R.drawable.dots_three_outline,
+                        backgroundColor = MaterialTheme.colorScheme.secondary,
+                        description = UiText.StringResource(R.string.dots_three),
+                        onClick = { onEvent(MainScreenEvent.OnReset) }
+                    )
                     WSpaser()
 
                     if (mainScreenUiState.isRunnable) {
