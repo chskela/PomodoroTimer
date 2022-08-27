@@ -36,8 +36,7 @@ class MainScreenViewModel(private val app: Application) : AndroidViewModel(app) 
     private val initialUiState: MainScreenUiState = MainScreenUiState(
         PomodoroState.Focus,
         true,
-        "25",
-        "00"
+        "25\n00"
     )
 
     var mainScreenUiState: MutableState<MainScreenUiState> = mutableStateOf(initialUiState)
