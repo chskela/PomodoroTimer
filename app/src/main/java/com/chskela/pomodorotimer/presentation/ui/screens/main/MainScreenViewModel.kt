@@ -8,6 +8,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
 import com.chskela.pomodorotimer.R
+import com.chskela.pomodorotimer.domain.PomodoroState
+import com.chskela.pomodorotimer.domain.TimerState
 import com.chskela.pomodorotimer.util.Constants.LONG_BREAK
 import com.chskela.pomodorotimer.util.Constants.ONE_SECOND
 import com.chskela.pomodorotimer.util.Constants.SHORT_BREAK

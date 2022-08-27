@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.chskela.pomodorotimer.R
+import com.chskela.pomodorotimer.domain.PomodoroState
 import com.chskela.pomodorotimer.presentation.ui.components.button.UIButton
 import com.chskela.pomodorotimer.presentation.ui.components.button.UIButtonType
 import com.chskela.pomodorotimer.presentation.ui.components.chip.ChipUiState

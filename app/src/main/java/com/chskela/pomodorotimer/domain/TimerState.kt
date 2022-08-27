@@ -1,4 +1,4 @@
-package com.chskela.pomodorotimer.presentation.ui.screens.main
+package com.chskela.pomodorotimer.domain
 
 sealed class TimerState {
     object Running : TimerState()
