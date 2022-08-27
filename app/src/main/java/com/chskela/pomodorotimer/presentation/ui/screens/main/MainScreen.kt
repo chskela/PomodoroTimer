@@ -81,7 +81,7 @@ fun MainScreen(
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                     },
-                    text = "${mainScreenUiState.minutes}\n${mainScreenUiState.seconds}",
+                    text = mainScreenUiState.timerTime,
                     style = MaterialTheme.typography.titleLarge.copy(fontWeight = textFontWent),
                     color = MaterialTheme.colorScheme.onSurface
                 )
@@ -137,8 +137,7 @@ fun PreviewMainScreen() {
         MainScreenUiState(
             PomodoroState.Focus,
             true,
-            "25",
-            "00"
+            "25\n00"
         )
     )
 }
