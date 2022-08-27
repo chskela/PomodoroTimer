@@ -33,14 +33,14 @@ class MainScreenViewModel(private val app: Application) : AndroidViewModel(app) 
         NotificationManager::class.java
     ) as NotificationManager
 
-    var mainScreenUiState: MutableState<MainScreenUiState> = mutableStateOf(
-        MainScreenUiState(
-            PomodoroState.Focus,
-            true,
-            "25",
-            "00"
-        )
+    private val initialUiState: MainScreenUiState = MainScreenUiState(
+        PomodoroState.Focus,
+        true,
+        "25",
+        "00"
     )
+
+    var mainScreenUiState: MutableState<MainScreenUiState> = mutableStateOf(initialUiState)
 
     private var timerState: TimerState = TimerState.Stop
 
