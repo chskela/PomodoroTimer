@@ -16,7 +16,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.chskela.pomodorotimer.R
 import com.chskela.pomodorotimer.domain.PomodoroState
 import com.chskela.pomodorotimer.presentation.ui.components.button.UIButton
@@ -30,12 +29,15 @@ import com.chskela.pomodorotimer.util.UiText
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun MainScreen(mainScreenViewModel: MainScreenViewModel = viewModel()) {
+fun MainScreen(
+    mainScreenUiState: MainScreenUiState,
+    onEvent: (MainScreenEvent) -> Unit = {}
+) {
 
     val textFontWent: FontWeight =
-        if (mainScreenViewModel.isRunnable.value) FontWeight.Normal else FontWeight.SemiBold
+        if (mainScreenUiState.isRunnable) FontWeight.Normal else FontWeight.SemiBold
 
-    val colorScheme: PomodoroColorScheme = when (mainScreenViewModel.pomodoroState.value) {
+    val colorScheme: PomodoroColorScheme = when (mainScreenUiState.pomodoroState) {
         PomodoroState.Focus -> PomodoroColorScheme.RedColorScheme
         PomodoroState.LongBreak -> PomodoroColorScheme.BlueColorScheme
         PomodoroState.ShortBreak -> PomodoroColorScheme.GreenColorScheme
@@ -55,7 +57,7 @@ fun MainScreen(mainScreenViewModel: MainScreenViewModel = viewModel()) {
                     top.linkTo(parent.top, margin = 16.dp)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
-                }, targetState = mainScreenViewModel.pomodoroState.value) { pomodoroState ->
+                }, targetState = mainScreenUiState.pomodoroState) { pomodoroState ->
 
                     val chipUiState: ChipUiState = when (pomodoroState) {
                         PomodoroState.Focus -> ChipUiState()
@@ -79,7 +81,7 @@ fun MainScreen(mainScreenViewModel: MainScreenViewModel = viewModel()) {
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                     },
-                    text = "${mainScreenViewModel.minutes.value}\n${mainScreenViewModel.seconds.value}",
+                    text = "${mainScreenUiState.minutes}\n${mainScreenUiState.seconds}",
                     style = MaterialTheme.typography.titleLarge.copy(fontWeight = textFontWent),
                     color = MaterialTheme.colorScheme.onSurface
                 )
@@ -100,16 +102,16 @@ fun MainScreen(mainScreenViewModel: MainScreenViewModel = viewModel()) {
 //                    )
                     WSpaser()
 
-                    if (mainScreenViewModel.isRunnable.value) {
+                    if (mainScreenUiState.isRunnable) {
                         UIButton(
                             type = UIButtonType.Large,
-                            onClick = { mainScreenViewModel.onEvent(MainScreenEvent.OnStart) }
+                            onClick = { onEvent(MainScreenEvent.OnStart) }
                         )
                     } else {
                         UIButton(
                             type = UIButtonType.Large,
                             icon = R.drawable.pause,
-                            onClick = { mainScreenViewModel.onEvent(MainScreenEvent.OnPause) }
+                            onClick = { onEvent(MainScreenEvent.OnPause) }
                         )
                     }
 
@@ -130,5 +132,12 @@ fun MainScreen(mainScreenViewModel: MainScreenViewModel = viewModel()) {
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun PreviewMainScreen() {
-    MainScreen()
+    MainScreen(
+        MainScreenUiState(
+            PomodoroState.Focus,
+            true,
+            "25",
+            "00"
+        )
+    )
 }
