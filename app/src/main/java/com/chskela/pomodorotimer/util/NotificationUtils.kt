@@ -8,6 +8,9 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationCompat.PRIORITY_HIGH
+import androidx.core.app.NotificationCompat.VISIBILITY_PUBLIC
+import androidx.core.app.NotificationManagerCompat
 import com.chskela.pomodorotimer.MainActivity
 import com.chskela.pomodorotimer.R
 
@@ -34,6 +37,8 @@ fun NotificationManager.sendNotification(
         .setContentText(messageBody)
         .setContentIntent(contentPendingIntent)
         .setAutoCancel(true)
+        .setPriority(PRIORITY_HIGH)
+        .setVisibility(VISIBILITY_PUBLIC)
 
     notify(NOTIFICATION_ID, builder.build())
 }
@@ -46,7 +51,7 @@ fun createChannel(context: Context, channelId: String, channelName: String) {
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         val notificationChannel = NotificationChannel(
-            channelId, channelName, NotificationManager.IMPORTANCE_LOW
+            channelId, channelName, NotificationManager.IMPORTANCE_HIGH
         )
 
         notificationChannel.enableLights(true)
@@ -54,7 +59,7 @@ fun createChannel(context: Context, channelId: String, channelName: String) {
         notificationChannel.enableVibration(true)
         notificationChannel.description = "Time for Pomodoro"
 
-        val notificationManager = context.getSystemService(NotificationManager::class.java)
+        val notificationManager = NotificationManagerCompat.from(context)
 
         notificationManager.createNotificationChannel(notificationChannel)
     }
